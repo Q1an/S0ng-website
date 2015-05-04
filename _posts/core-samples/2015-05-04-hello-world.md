@@ -1,7 +1,8 @@
 ---
 layout: post
 title :  Hello World
-categories : [nonsense]
+category : [nonsense]
+tags: [test]
 ---
 {% include JB/setup %}
 
