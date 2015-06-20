@@ -4,3 +4,28 @@
 .section {
 	padding-top: 50px;
 }
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+  stroke-width: 3px;
+}
+
+
+.line1 {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+.line2 {
+  fill: none;
+  stroke: yellow;
+  stroke-width: 3px;
+}
+.line3 {
+  fill: none;
+  stroke: red;
+  stroke-width: 3px;
+}
+

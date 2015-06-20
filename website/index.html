@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
 <html lang="en">
   <head>
     <title>中国人口老龄化预测报告</title>
@@ -33,11 +33,86 @@
         <h1>一. 中国人口老龄化的现状</h1>
           <h3>(一) 人口转变过程与特点</h3>
             <p>首先说明，由于我们的研究报告关注于未来的人口发展趋势，所以在分析现状的过程中人为的忽略1978年之前的人口发展过程，也不考虑历史上曾出现的“三年自然灾害”和“文化大革命”再次出现在未来三十年内的中国。</p>
-            <p>另外，我们采取陈剑（2002）提出的指标，自然增长率到5‰到-5‰之间波动时既可以认为是完成了人口转变，进入“后人口转变”时期。</p>
-            <br>
+            <p id="c1">另外，我们采取陈剑（2002）提出的指标，自然增长率到5‰到-5‰之间波动时既可以认为是完成了人口转变，进入“后人口转变”时期。</p>
             <center>
-              <img src="img/1.png"></a>
-              <br>
+              <script>  
+              var margin = {top: 20, right: 20, bottom: 30, left: 50},
+              width = 600 - margin.left - margin.right,
+              height = 500 - margin.top - margin.bottom;
+
+              var x = d3.time.scale()
+              .range([0, width]);
+
+              var y = d3.scale.linear()
+              .range([height, 0]);
+
+              var xAxis = d3.svg.axis()
+              .scale(x)
+              .orient("bottom");
+
+              var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left");
+
+              var line1 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y1); });
+              var line2 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y2); });
+              var line3 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y3); });
+
+              var svg1 = d3.select("#c1").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              d3.tsv("data1.tsv", function(error, data) {
+              if (error) throw error;
+              var parseDate = d3.time.format("%Y").parse;
+
+              data.forEach(function(d) {
+                d.x = +parseDate(String(d.x));
+                d.y1 = +d.y1;
+                d.y2 = +d.y2;
+                d.y3 = +d.y3;
+              });
+
+              x.domain(d3.extent(data, function(d) { return d.x; }));
+              y.domain([0,30]);
+
+              svg1.append("g")
+                 .attr("class", "y axis")
+                 .call(yAxis)
+                 .append("text")
+                 .attr("transform", "rotate(-90)")
+                 .attr("y", 6)
+                 .attr("dy", ".71em")
+                 .style("text-anchor", "end")
+                 .text("百分比 (%)");
+
+              svg1.append("path")
+                 .datum(data)
+                 .attr("class", "line1")
+                 .attr("d", line1);
+              svg1.append("path")
+                 .datum(data)
+                 .attr("class", "line2")
+                 .attr("d", line2);
+              svg1.append("path")
+                 .datum(data)
+                 .attr("class", "line3")
+                 .attr("d", line3);
+
+              svg1.append("g")
+                 .attr("class", "x axis")
+                 .attr("transform", "translate(0," + height + ")")
+                 .call(xAxis);
+              });
+              </script>
               <h6>资料来源：国家统计局《中国统计年鉴2014》，中国统计出版社2004年版</h6>
             </center>
             <br>
@@ -50,12 +125,89 @@
           <h3>(二) 中国的人口老龄化过程</h3>
             <p>我国人口老龄化愈发严重。在1982年第三次人口普查时，65岁以上老年人口比例达到了4.91%，1990年的第四次普查达到了5.57%，2000年第五次人口普查时更是达到了6.96%，2010年第六次人口普查达到了8.87%。</p>
             <p>在中国人口老龄化的过程中，不同阶段不同因素的作用不同。在人口老龄化前期，剩余率降低是导致人口老龄化的一个重要因素，而近年来，人口结构即人口惯性的作用成为导致人口老龄化的主要因素。伴随生活水平以及医疗水平的提高，平均预期寿命延长，这也是老龄化日益严重的一个重要原因。</p>
-            <p>从人口乘数的角度来分析，如果将人口乘数扩展为期末人口是期初人口的多少倍，我们可以发现从1953年的第一次人口普查到2000年第五次人口普查时，总人口乘数为2.13，0-14人口乘数为1.34，15-64岁组的人口乘数为2.52，65岁及以上组的人口乘数为3.36，到2010年第六次人口普查时，少儿人口乘数下降到1.03。15-64岁人口乘数上升到2.85，65岁以上老年人口乘数则快速增长至4.53。老年组的人口乘数明显高于其他两个年龄组，这说明老年人口规模的扩张低于低年龄组。</p>
-            <p>由于中国人口转变在较短时间内完成，因此人口转变完成时，人口转变时期出生的大量人口将在人口转变完成时才进入老年。由此可以推断，人口老龄化即将迎来一个加速的时期。</p>
+            <p >从人口乘数的角度来分析，如果将人口乘数扩展为期末人口是期初人口的多少倍，我们可以发现从1953年的第一次人口普查到2000年第五次人口普查时，总人口乘数为2.13，0-14人口乘数为1.34，15-64岁组的人口乘数为2.52，65岁及以上组的人口乘数为3.36，到2010年第六次人口普查时，少儿人口乘数下降到1.03。15-64岁人口乘数上升到2.85，65岁以上老年人口乘数则快速增长至4.53。老年组的人口乘数明显高于其他两个年龄组，这说明老年人口规模的扩张低于低年龄组。</p>
+            <p id="c2">由于中国人口转变在较短时间内完成，因此人口转变完成时，人口转变时期出生的大量人口将在人口转变完成时才进入老年。由此可以推断，人口老龄化即将迎来一个加速的时期。</p>
             <br>
             <center>
-              <img src="img/2.png"></a>
-              <br>
+              <script>  
+              var margin = {top: 20, right: 20, bottom: 30, left: 50},
+              width = 600 - margin.left - margin.right,
+              height = 500 - margin.top - margin.bottom;
+
+              var x = d3.time.scale()
+              .range([0, width]);
+
+              var y = d3.scale.linear()
+              .range([height, 0]);
+
+              var xAxis = d3.svg.axis()
+              .scale(x)
+              .orient("bottom");
+
+              var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left");
+
+              
+              var xScale = d3.scale.ordinal()
+              .domain([1982,2013])
+              .rangeRoundBands([0,width],0.05);
+
+              var yScale = d3.scale.linear()
+              .domain([0,175000])
+              .range([0,height]);
+
+              var rect1 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y1); });
+              var rect2 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y2); });
+              var rect3 = d3.svg.line()
+              .x(function(d) { return x(d.x); })
+              .y(function(d) { return y(d.y3); });
+
+              var svg2 = d3.select("#c2").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              d3.tsv("data2.tsv", function(error, data) {
+              if (error) throw error;
+              var parseDate = d3.time.format("%Y").parse;
+
+              data.forEach(function(d) {
+                d.x = +parseDate(String(d.x));
+                d.y1 = +d.y1;
+                d.y2 = +d.y2;
+                d.y3 = +d.y3;
+              });
+
+              x.domain(d3.extent(data, function(d) { return d.x; }));
+              y.domain([0,175000]);
+
+
+
+              svg2.selectAll("rect")
+                  .data(data)
+                  .enter()
+                  .append("rect")
+                  .attr("x", function(d,i){
+                   return 30 + xScale(i);
+                  } )
+                  .attr("y",function(d,i){
+                  return 50 + 500 - yScale(d) ;
+                  })
+                  .attr("width", function(d,i){
+                  return xScale.rangeBand();
+                  })
+                  .attr("height",yScale)
+                  .attr("fill","red");
+
+
+              });
+              </script>
               <h6>资料来源：国家统计局《中国统计年鉴2014》，中国统计出版社2004年版</h6>
             </center>
             <br>
